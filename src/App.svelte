@@ -7,7 +7,9 @@
 -->
 
 
+
 <script>
+	import TaskHistory from "./TaskHistory.svelte";
 	export let name;
 </script>
 
@@ -15,6 +17,9 @@
 	<h1>Hello {name}!</h1>
 	<p>Bienvenidos a la App <a href="/">Pomodoro Timer </a> para administrar tu tiempo y tareas.</p>
 </main>
+<section>
+	<TaskHistory/>
+</section>
 
 <style>
 	main {

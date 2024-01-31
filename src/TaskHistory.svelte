@@ -18,6 +18,32 @@
     //Ejemplo de cómo almacenar en localStorage
 
     const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
-
+    const inputTarea = "";
 </script>
+
+<section class="contenedor-fila">
+    <label for="nombre-tarea">Nombre de la tarea:</label>
+    <input type="text" id="nombre-tarea" name="nombre-tarea" placeholder="Ingresa el nombre de la tarea" required>
+</section>
+
+<style>
+
+  .contenedor-fila {
+    margin: 1%;
+    display: flex;
+    align-items: center;
+  }
+
+  label {
+    margin-right: 1%; /* Ajusta el margen según tus necesidades */
+    flex-shrink: 0; /* Evita que la etiqueta se reduzca si hay poco espacio */
+  }
+
+  input {
+    max-width: 100%;
+    width: 390px;
+  }
+
+</style>
+
 
