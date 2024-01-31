@@ -1,0 +1,16 @@
+.DS_Store
+
+
+# Node.js
+node_modules/
+
+# Algunos editores y carpetas específicas
+.vscode/
+.idea/
+
+# Archivos generados en el proceso de construcción
+/build/
+/public/build/
+
+# Archivos de entorno (si estás utilizando variables de entorno)
+.env
