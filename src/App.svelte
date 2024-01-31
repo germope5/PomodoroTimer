@@ -13,7 +13,7 @@
 
 <main>
 	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<p>Bienvenidos a la App <a href="/">Pomodoro Timer </a> para administrar tu tiempo y tareas.</p>
 </main>
 
 <style>
@@ -22,6 +22,7 @@
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+		background: linear-gradient(to bottom, #313131, #6a6a6a);
 	}
 
 	h1 {
@@ -29,6 +30,18 @@
 		text-transform: uppercase;
 		font-size: 4em;
 		font-weight: 100;
+	}
+
+	p {
+		color: whitesmoke;
+		/* text-transform: lowercase; */
+		font-size: 1.5em;
+		font-weight: 20;
+
+	}
+
+	p a {
+		color:#ff3e00;
 	}
 
 	@media (min-width: 640px) {
