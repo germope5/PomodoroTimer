@@ -1,3 +1,12 @@
+<!-- Componente Principal para la Aplicación -->
+<!-- 
+	* Integrar los componentes de Timer y TaskHistory
+	en la App.svelte 
+	Utilizar el estado global para compartir información entre ellos, como
+	las tareas completadas y el historial hasta ese momento. 
+-->
+
+
 <script>
 	export let name;
 </script>
