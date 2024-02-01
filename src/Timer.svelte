@@ -22,8 +22,13 @@
 
     //Variable para controlar el Tiempo Restante Predeterminado del Temporizador
     let tiempoRestante = 1500;
+    let descansoCorto = 300; // Duración predeterminada del descanso corto: 5 minutos
+    let descansoLargo = 900; // Duración predeterminada del descanso largo: 15 minutos
 
     let titulo = "Pomodoro Timer Aplicación";
+
+    let bloquesTrabajo = 0; //Contador para seguir la pauta de intervalos.
+    let temporizador;
 
     //Función para Cambiar de Tarea
     function cambiarTarea() {
@@ -44,8 +49,16 @@
             if (tiempoRestante > 0) {
             tiempoRestante--;
             } else {
-            // Pomodoro completado, puedes realizar acciones adicionales aquí
-            detenerPomodoro();
+                //Intervalo de Trabajo y Descanso
+                detenerPomodoro();
+                if (bloquesTrabajo % 3 === 2) {
+                    //Descanso largo después de tres bloques
+                    tiempoRestante = descansoLargo;
+                } else {
+                    //Descanso corto despupes de cada bloque de trabajo
+                    tiempoRestante = descansoCorto;
+                }
+                bloquesTrabajo++;
             }
         }, 1000);
         }
@@ -67,6 +80,7 @@
     function siguienteCiclo() {
         // Puedes implementar lógica adicional para el siguiente ciclo aquí
         detenerPomodoro();
+        bloquesTrabajo = 0; // Reiniciar el contador de bloques al pasar al siguiente ciclo
         // Por ejemplo, si quieres pasar al descanso, puedes ajustar el tiempo y llamar a iniciarPomodoro()
   }
 
