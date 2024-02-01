@@ -11,8 +11,18 @@
     para que los usuarios puedan ajustar la duración de
     trabajo y descanso según sus preferencias.
 
+    * Para mantener el temporizador activo en segundo plano, se puede hacer uso
+    de la API de Page Visibility, que proporciona eventos y propiedades que  detectan
+    cuando una página esta activa o no.
+
+
+
 -->
+
+
 <script>
+
+    import {onMount} from 'svelte';
 
     const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
     let inputTarea = "";
@@ -82,6 +92,23 @@
         detenerPomodoro();
         bloquesTrabajo = 0; // Reiniciar el contador de bloques al pasar al siguiente ciclo
         // Por ejemplo, si quieres pasar al descanso, puedes ajustar el tiempo y llamar a iniciarPomodoro()
+  }
+
+  onMount(() => {
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  });
+
+  function handleVisibilityChange() {
+    if(document.hidden) {
+        //La página está en segundo plano, pausar el temporizador
+        pausarPomodoro();
+    } else {
+        //La página esta de nuevo en primer plano, reanudar el pomodoro
+        if (pomodoroRunning) {
+            iniciarPomodoro();
+        }
+    }
   }
 
 </script>
