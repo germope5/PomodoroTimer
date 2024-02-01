@@ -56,21 +56,19 @@
         // Iniciar el pomodoro solo si se ha definido una tarea
         pomodoroRunning = true;
         temporizador = setInterval(() => {
-            if (tiempoRestante > 0) {
-            tiempoRestante--;
-            } else {
-                //Intervalo de Trabajo y Descanso
-                detenerPomodoro();
-                if (bloquesTrabajo % 3 === 2) {
-                    //Descanso largo después de tres bloques
-                    tiempoRestante = descansoLargo;
-                } else {
-                    //Descanso corto despupes de cada bloque de trabajo
-                    tiempoRestante = descansoCorto;
-                }
-                bloquesTrabajo++;
-            }
-        }, 1000);
+      if (tiempoRestante > 0) {
+        tiempoRestante--;
+      } else {
+        detenerPomodoro();
+        mostrarAlertaFinBloque(); // Mostrar la alerta/notificación al final de cada bloque
+        if (bloquesTrabajo % 3 === 2) {
+          tiempoRestante = descansoLargo;
+        } else {
+          tiempoRestante = descansoCorto;
+        }
+        bloquesTrabajo++;
+      }
+    }, 1000);
         }
     }
 
@@ -100,15 +98,37 @@
   });
 
   function handleVisibilityChange() {
-    if(document.hidden) {
-        //La página está en segundo plano, pausar el temporizador
-        pausarPomodoro();
+    if (document.hidden) {
+      // La página está en segundo plano, pausar el temporizador
+      pausarPomodoro();
     } else {
-        //La página esta de nuevo en primer plano, reanudar el pomodoro
-        if (pomodoroRunning) {
-            iniciarPomodoro();
-        }
+      // La página está de nuevo en primer plano, reanudar el temporizador si estaba en ejecución
+      if (pomodoroRunning) {
+        iniciarPomodoro();
+      }
     }
+  }
+
+  function mostrarNotificacion(mensaje) {
+    // Verificar si las notificaciones son compatibles con el navegador
+    if ('Notification' in window && Notification.permission === 'granted') {
+      // Mostrar una notificación
+      new Notification(mensaje);
+    } else if ('Notification' in window && Notification.permission !== 'denied') {
+      // Solicitar permiso para mostrar notificaciones
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification(mensaje);
+        }
+      });
+    } else {
+      // Alerta si las notificaciones no son compatibles
+      alert(mensaje);
+    }
+  }
+
+  function mostrarAlertaFinBloque() {
+    mostrarNotificacion("¡Se ha completado un Bloque!  ¡Comienza el siguiente!");
   }
 
 </script>
