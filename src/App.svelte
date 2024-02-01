@@ -10,6 +10,7 @@
 
 <script>
 	import TaskHistory from "./TaskHistory.svelte";
+	import Timer from "./Timer.svelte";
 	export let name;
 </script>
 
@@ -19,6 +20,7 @@
 </main>
 <section>
 	<TaskHistory/>
+	<Timer/>
 </section>
 
 <style>

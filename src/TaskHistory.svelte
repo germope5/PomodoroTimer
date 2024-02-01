@@ -20,51 +20,42 @@
     const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
     let inputTarea = "";
 
-    //Variable para definir si el Timer esta activo o no
-    let pomodoroRunning = false;
 
     //Función para Cambiar de Tarea
     function cambiarTarea() {
-      if(!pomodoroRunning) {
-        //Cambia la tarea solo si el POMODORO no está en ejecución.
-        taskHistory.push(inputTarea);
+    // Cambiar la tarea solo si no hay tareas en ejecución actualmente
+    if (!tareaEnEjecucion()) {
+      // Asegurarse de que hay un nombre de tarea válido antes de cambiar
+      if (inputTarea.trim() !== "") {
+        taskHistory.push(inputTarea.trim());
         localStorage.setItem('taskHistory', JSON.stringify(taskHistory));
-        inputTarea = ""; //Limpiar el campo de entrada despúes de cambiar de tarea
+        inputTarea = ""; // Limpiar el campo de entrada después de cambiar la tarea
       }
     }
+  }
 
-    //Función para Iniciar Pomodoro
-    function iniciarPomodoro () {
-      if (inputTarea !== "") {
-        //Iniciar el Pomodoro solo si se ha definido una tarea
-        //Implementare la lógica para Iniciar el Pomodoro
-        pomodoroRunning = true;
-      }
-    }
+  // Función que verifica si hay una tarea en ejecución actualmente
+  function tareaEnEjecucion() {
+    // Puedes agregar lógica adicional aquí según tus necesidades
+    // Por ejemplo, si estás implementando el temporizador Pomodoro, podrías verificar si está en ejecución
+    return false; // Cambia esto según tu implementación
+  }
 
-    // Función para Detener el Programa
-    function detenerPomodoro() {
-      // Lógica para la detención del POMODORO
-      pomodoroRunning = false;
-    }
+    
 </script>
 
 <!-- Componente para introducir el nombre de la tarea. -->
 <section class="contenedor-fila">
     <label for="inputTarea">Nombre de la tarea:</label>
-    <input type="text" id="inputTarea" name="inputTarea" placeholder="Ingresa el nombre de la tarea" required>
-    <button on:click={cambiarTarea} disabled={pomodoroRunning}>Cambiar Tarea</button>
+    <input type="text" id="inputTarea" name="inputTarea" placeholder="Ingresa el nombre de la tarea..." required>
+    <button on:click={cambiarTarea} disabled={tareaEnEjecucion()}>Cambiar Tarea</button>
 </section>
 
-<section>
-  <button on:click={iniciarPomodoro} disabled={pomodoroRunning || inputTarea === "" }>Iniciar Pomodoro</button>
-  <button on:click={detenerPomodoro} disabled={!pomodoroRunning}>Detener Pomodoro</button>
-</section>
 
 <style>
 
   .contenedor-fila {
-    margin: 1%;
+    margin: 2%;
     display: flex;
     align-items: center;
   }
@@ -72,11 +63,26 @@
   label {
     margin-right: 1%; /* Ajusta el margen según tus necesidades */
     flex-shrink: 0; /* Evita que la etiqueta se reduzca si hay poco espacio */
+    font-size: 18px;
   }
 
   input {
     max-width: 100%;
     width: 390px;
+  }
+
+  button {
+    background: linear-gradient(to right, #ff3e00, #808080);
+    color: whitesmoke;
+    border-color: #342300;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Agregamos una transición para suavizar el cambio de color */
+  }
+
+  button:active {
+    background:linear-gradient(to left, #258fd6, #676767);
+    border-color: #011c2f; 
+
   }
 
 </style>
