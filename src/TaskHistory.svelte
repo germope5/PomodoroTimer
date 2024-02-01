@@ -18,12 +18,47 @@
     //Ejemplo de cómo almacenar en localStorage
 
     const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
-    const inputTarea = "";
+    let inputTarea = "";
+
+    //Variable para definir si el Timer esta activo o no
+    let pomodoroRunning = false;
+
+    //Función para Cambiar de Tarea
+    function cambiarTarea() {
+      if(!pomodoroRunning) {
+        //Cambia la tarea solo si el POMODORO no está en ejecución.
+        taskHistory.push(inputTarea);
+        localStorage.setItem('taskHistory', JSON.stringify(taskHistory));
+        inputTarea = ""; //Limpiar el campo de entrada despúes de cambiar de tarea
+      }
+    }
+
+    //Función para Iniciar Pomodoro
+    function iniciarPomodoro () {
+      if (inputTarea !== "") {
+        //Iniciar el Pomodoro solo si se ha definido una tarea
+        //Implementare la lógica para Iniciar el Pomodoro
+        pomodoroRunning = true;
+      }
+    }
+
+    // Función para Detener el Programa
+    function detenerPomodoro() {
+      // Lógica para la detención del POMODORO
+      pomodoroRunning = false;
+    }
 </script>
 
+<!-- Componente para introducir el nombre de la tarea. -->
 <section class="contenedor-fila">
-    <label for="nombre-tarea">Nombre de la tarea:</label>
-    <input type="text" id="nombre-tarea" name="nombre-tarea" placeholder="Ingresa el nombre de la tarea" required>
+    <label for="inputTarea">Nombre de la tarea:</label>
+    <input type="text" id="inputTarea" name="inputTarea" placeholder="Ingresa el nombre de la tarea" required>
+    <button on:click={cambiarTarea} disabled={pomodoroRunning}>Cambiar Tarea</button>
+</section>
+
+<section>
+  <button on:click={iniciarPomodoro} disabled={pomodoroRunning || inputTarea === "" }>Iniciar Pomodoro</button>
+  <button on:click={detenerPomodoro} disabled={!pomodoroRunning}>Detener Pomodoro</button>
 </section>
 
 <style>
