@@ -51,6 +51,8 @@
 
     
 
+    
+
     //Función para Iniciar Pomodoro
     function iniciarPomodoro() {
         if (inputTarea.trim() !== "") {
@@ -150,12 +152,16 @@
 <section class="ContenedorTimer">
 
     <h1>{titulo}</h1>
-    <span>{tiempoMostrado}</span>
+    <section class="contenedor-tempo">
+      <span>{tiempoMostrado}</span>
+
+    </section>
+
     <section class="botones">
-        <button on:click={iniciarPomodoro} disabled={pomodoroRunning || inputTarea === ""}>Iniciar Pomodoro</button>
-    <button on:click={pausarPomodoro} disabled={!pomodoroRunning}>Pausar Pomodoro</button>
-    <button on:click={detenerPomodoro} disabled={!pomodoroRunning}>Detener Pomodoro</button>
-    <button on:click={siguienteCiclo} disabled={pomodoroRunning}>Siguiente Ciclo</button>
+      <button on:click={iniciarPomodoro} disabled={pomodoroRunning || inputTarea === ""}>Iniciar Pomodoro</button>
+      <button on:click={pausarPomodoro} disabled={!pomodoroRunning}>Pausar Pomodoro</button>
+      <button on:click={detenerPomodoro} disabled={!pomodoroRunning}>Detener Pomodoro</button>
+      <button on:click={siguienteCiclo} disabled={pomodoroRunning}>Siguiente Ciclo</button>
 
     </section>
     
@@ -166,6 +172,14 @@
 
     .ContenedorTimer {
         margin:2%;
+
+
+    }
+
+    .contenedor-tempo{
+      display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .botones {
@@ -207,5 +221,21 @@
         background:linear-gradient(to left, #258fd6, #676767); /* Cambiar color de fondo cuando se hace clic en el botón */
         border-color: #011c2f; 
     }
+
+    span {
+    font-size: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    color: #ff3e00;
+    background: linear-gradient(to top, #011c2f, #8e8d8d);;
+    max-width: 100%;
+    width: 300px;
+    height: 300px;
+    border-color: #000a10;
+    justify-content: center; /* Centra horizontalmente dentro del span */
+    align-items: center; /* Centra verticalmente dentro del span */
+    border-radius: 50%;
+}
 
 </style>

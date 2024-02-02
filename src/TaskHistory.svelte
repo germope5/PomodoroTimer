@@ -15,11 +15,20 @@
 -->
 
 <script>
-  // Importa la función cambiarTarea desde Timer.svelte
-  import { cambiarTarea } from '../src/Timer.svelte';
+  
 
   const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
   let inputTarea = "";
+
+   //Función para Cambiar de Tarea
+   function cambiarTarea() {
+    if (!pomodoroRunning) {
+      // Cambiar la tarea solo si el pomodoro no está en ejecución
+      taskHistory.push(inputTarea);
+      localStorage.setItem('taskHistory', JSON.stringify(taskHistory));
+      inputTarea = ""; // Limpiar el campo de entrada después de cambiar la tarea
+    }
+  }
 
   // Nueva función para definir y guardar la tarea actual
   function definirYGuardarTarea() {
