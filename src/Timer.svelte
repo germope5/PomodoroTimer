@@ -22,7 +22,7 @@
 
 <script>
 
-    import {onMount} from 'svelte';
+    import {onMount, afterUpdate} from 'svelte';
 
     const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
     let inputTarea = "";
@@ -40,35 +40,37 @@
     let bloquesTrabajo = 0; //Contador para seguir la pauta de intervalos.
     let temporizador;
 
-    //Función para Cambiar de Tarea
-    function cambiarTarea() {
-    if (!pomodoroRunning) {
-      // Cambiar la tarea solo si el pomodoro no está en ejecución
-      taskHistory.push(inputTarea);
-      localStorage.setItem('taskHistory', JSON.stringify(taskHistory));
-      inputTarea = ""; // Limpiar el campo de entrada después de cambiar la tarea
+    let tiempoMostrado = convertirSegundosAMinutos(tiempoRestante);
+
+    function convertirSegundosAMinutos(segundos) {
+        const minutos = Math.floor(segundos / 60);
+        const segundosRestantes = segundos % 60;
+
+        return `${minutos}:${segundosRestantes < 10 ? '0' : ''}${segundosRestantes}`;
     }
-  }
+
+    
 
     //Función para Iniciar Pomodoro
     function iniciarPomodoro() {
-        if (inputTarea !== "") {
-        // Iniciar el pomodoro solo si se ha definido una tarea
-        pomodoroRunning = true;
-        temporizador = setInterval(() => {
-      if (tiempoRestante > 0) {
-        tiempoRestante--;
-      } else {
-        detenerPomodoro();
-        mostrarAlertaFinBloque(); // Mostrar la alerta/notificación al final de cada bloque
-        if (bloquesTrabajo % 3 === 2) {
-          tiempoRestante = descansoLargo;
-        } else {
-          tiempoRestante = descansoCorto;
-        }
-        bloquesTrabajo++;
-      }
-    }, 1000);
+        if (inputTarea.trim() !== "") {
+            // Iniciar el pomodoro solo si se ha definido una tarea
+            pomodoroRunning = true;
+            temporizador = setInterval(() => {
+                if (tiempoRestante > 0) {
+                    tiempoRestante--;
+                    actualizarTiempoMostrado();
+                } else {
+                    detenerPomodoro();
+                    mostrarAlertaFinBloque();
+                    if (bloquesTrabajo % 3 === 2) {
+                        tiempoRestante = descansoLargo;
+                    } else {
+                        tiempoRestante = descansoCorto;
+                    }
+                    bloquesTrabajo++;
+                }
+            }, 1000);
         }
     }
 
@@ -98,16 +100,17 @@
   });
 
   function handleVisibilityChange() {
-    if (document.hidden) {
-      // La página está en segundo plano, pausar el temporizador
-      pausarPomodoro();
-    } else {
-      // La página está de nuevo en primer plano, reanudar el temporizador si estaba en ejecución
-      if (pomodoroRunning) {
-        iniciarPomodoro();
-      }
+  console.log('Visibility changed:', document.hidden);
+  if (document.hidden) {
+    // La página está en segundo plano, pausar el temporizador
+    pausarPomodoro();
+  } else {
+    // La página está de nuevo en primer plano, reanudar el temporizador si estaba en ejecución
+    if (pomodoroRunning) {
+      iniciarPomodoro();
     }
   }
+}
 
   function mostrarNotificacion(mensaje) {
     // Verificar si las notificaciones son compatibles con el navegador
@@ -131,11 +134,23 @@
     mostrarNotificacion("¡Se ha completado un Bloque!  ¡Comienza el siguiente!");
   }
 
+  function actualizarTiempoMostrado() {
+    tiempoMostrado = convertirSegundosAMinutos(tiempoRestante);
+  }
+
+  afterUpdate(() => {
+    // Manejar actualizaciones después de cada renderizado
+    if (pomodoroRunning) {
+      actualizarTiempoMostrado();
+    }
+  });
+
 </script>
 
 <section class="ContenedorTimer">
 
     <h1>{titulo}</h1>
+    <span>{tiempoMostrado}</span>
     <section class="botones">
         <button on:click={iniciarPomodoro} disabled={pomodoroRunning || inputTarea === ""}>Iniciar Pomodoro</button>
     <button on:click={pausarPomodoro} disabled={!pomodoroRunning}>Pausar Pomodoro</button>

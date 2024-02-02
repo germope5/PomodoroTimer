@@ -15,14 +15,14 @@
 -->
 
 <script>
-    //Ejemplo de cómo almacenar en localStorage
+  // Importa la función cambiarTarea desde Timer.svelte
+  import { cambiarTarea } from '../src/Timer.svelte';
 
-    const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
-    let inputTarea = "";
+  const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
+  let inputTarea = "";
 
-
-    //Función para Cambiar de Tarea
-    function cambiarTarea() {
+  // Nueva función para definir y guardar la tarea actual
+  function definirYGuardarTarea() {
     // Cambiar la tarea solo si no hay tareas en ejecución actualmente
     if (!tareaEnEjecucion()) {
       // Asegurarse de que hay un nombre de tarea válido antes de cambiar
@@ -40,15 +40,14 @@
     // Por ejemplo, si estás implementando el temporizador Pomodoro, podrías verificar si está en ejecución
     return false; // Cambia esto según tu implementación
   }
-
-    
 </script>
 
 <!-- Componente para introducir el nombre de la tarea. -->
 <section class="contenedor-fila">
-    <label for="inputTarea">Nombre de la tarea:</label>
-    <input type="text" id="inputTarea" name="inputTarea" placeholder="Ingresa el nombre de la tarea..." required>
-    <button on:click={cambiarTarea} disabled={tareaEnEjecucion()}>Cambiar Tarea</button>
+  <label for="inputTarea">Nombre de la tarea:</label>
+  <input type="text" bind:value={inputTarea} id="inputTarea" name="inputTarea" placeholder="Ingresa el nombre de la tarea..." required>
+  <button on:click={cambiarTarea} disabled={tareaEnEjecucion()}>Cambiar Tarea</button>
+  <button on:click={definirYGuardarTarea} disabled={tareaEnEjecucion()}>Definir Tarea</button>
 </section>
 
 
