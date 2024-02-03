@@ -9,7 +9,7 @@
 
 
 <script>
-	import TaskHistory from "./TaskHistory.svelte";
+	
 	import Timer from "./Timer.svelte";
 	export let name;
 </script>
@@ -19,7 +19,7 @@
 	<p>Bienvenidos a la App <a href="/">Pomodoro Timer </a> para administrar tu tiempo y tareas.</p>
 </main>
 <section>
-	<TaskHistory/>
+	
 	<Timer/>
 </section>
 

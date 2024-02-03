@@ -22,26 +22,50 @@
 
 <script>
 
-    import {onMount, afterUpdate} from 'svelte';
+    import { afterUpdate} from 'svelte';
+
 
     const taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
     let inputTarea = "";
 
-    //Variable para definir si el Timer esta activo o no
-    let pomodoroRunning = false;
 
-    //Variable para controlar el Tiempo Restante Predeterminado del Temporizador
-    let tiempoRestante = 1500;
-    let descansoCorto = 300; // Duración predeterminada del descanso corto: 5 minutos
-    let descansoLargo = 900; // Duración predeterminada del descanso largo: 15 minutos
+  // Variables para el temporizador
+  let pomodoroRunning = false;
+  let tiempoRestante = 1500;
+  let descansoCorto = 300;
+  let descansoLargo = 900;
+  let bloquesTrabajo = 0;
+  let temporizador;
+  let tiempoMostrado = convertirSegundosAMinutos(tiempoRestante);
 
-    let titulo = "Pomodoro Timer Aplicación";
 
-    let bloquesTrabajo = 0; //Contador para seguir la pauta de intervalos.
-    let temporizador;
+     //Función para Iniciar Pomodoro
+  function iniciarPomodoro() {
+    console.log('Iniciando el Pomodoro...');
+    // pomodoroRunning = true;
+    if (inputTarea.trim() !== "") {
+      console.log('Tarea definida. Iniciando temporizador...');
+      // Iniciar el pomodoro solo si se ha definido una tarea
+      pomodoroRunning = true;
+      temporizador = setInterval(() => {
+        if (tiempoRestante > 0) {
+          tiempoRestante--;
+          actualizarTiempoMostrado();
+        } else {
+          detenerPomodoro();
+          mostrarAlertaFinBloque();
+          if (bloquesTrabajo % 3 === 2) {
+            tiempoRestante = descansoLargo;
+          } else {
+            tiempoRestante = descansoCorto;
+          }
+          bloquesTrabajo++;
+        }
+      }, 1000);
+    }
+  }
 
-    let tiempoMostrado = convertirSegundosAMinutos(tiempoRestante);
-
+    
     function convertirSegundosAMinutos(segundos) {
         const minutos = Math.floor(segundos / 60);
         const segundosRestantes = segundos % 60;
@@ -49,95 +73,63 @@
         return `${minutos}:${segundosRestantes < 10 ? '0' : ''}${segundosRestantes}`;
     }
 
-    
-
-    
-
-    //Función para Iniciar Pomodoro
-    function iniciarPomodoro() {
-        if (inputTarea.trim() !== "") {
-            // Iniciar el pomodoro solo si se ha definido una tarea
-            pomodoroRunning = true;
-            temporizador = setInterval(() => {
-                if (tiempoRestante > 0) {
-                    tiempoRestante--;
-                    actualizarTiempoMostrado();
-                } else {
-                    detenerPomodoro();
-                    mostrarAlertaFinBloque();
-                    if (bloquesTrabajo % 3 === 2) {
-                        tiempoRestante = descansoLargo;
-                    } else {
-                        tiempoRestante = descansoCorto;
-                    }
-                    bloquesTrabajo++;
-                }
-            }, 1000);
-        }
-    }
-
     // Función para Pausar el POMODORO
     function pausarPomodoro() {
+      console.log('Se ha pausado el POMODORO...');
         clearInterval(temporizador);
         pomodoroRunning = false;
     }
 
     // Función para Detener el Programa
     function detenerPomodoro() {
+      console.log('Se ha detenido el POMODORO Definitivamente...');
         clearInterval(temporizador);
         pomodoroRunning = false;
         tiempoRestante = 1500; // Reiniciar el tiempo a 25 minutos
     }
 
     function siguienteCiclo() {
+      console.log('Se procede a comenzar un nuevo CICLO...');
         // Puedes implementar lógica adicional para el siguiente ciclo aquí
         detenerPomodoro();
         bloquesTrabajo = 0; // Reiniciar el contador de bloques al pasar al siguiente ciclo
         // Por ejemplo, si quieres pasar al descanso, puedes ajustar el tiempo y llamar a iniciarPomodoro()
   }
 
-  onMount(() => {
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-  });
-
-  function handleVisibilityChange() {
-  console.log('Visibility changed:', document.hidden);
-  if (document.hidden) {
-    // La página está en segundo plano, pausar el temporizador
-    pausarPomodoro();
-  } else {
-    // La página está de nuevo en primer plano, reanudar el temporizador si estaba en ejecución
-    if (pomodoroRunning) {
-      iniciarPomodoro();
-    }
-  }
-}
-
-  function mostrarNotificacion(mensaje) {
-    // Verificar si las notificaciones son compatibles con el navegador
-    if ('Notification' in window && Notification.permission === 'granted') {
-      // Mostrar una notificación
-      new Notification(mensaje);
-    } else if ('Notification' in window && Notification.permission !== 'denied') {
-      // Solicitar permiso para mostrar notificaciones
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          new Notification(mensaje);
-        }
-      });
-    } else {
-      // Alerta si las notificaciones no son compatibles
-      alert(mensaje);
-    }
-  }
-
-  function mostrarAlertaFinBloque() {
-    mostrarNotificacion("¡Se ha completado un Bloque!  ¡Comienza el siguiente!");
-  }
 
   function actualizarTiempoMostrado() {
     tiempoMostrado = convertirSegundosAMinutos(tiempoRestante);
+  }
+
+
+
+  // Función para Cambiar de Tarea
+  function cambiarTarea() {
+    if (!pomodoroRunning) {
+      // Cambiar la tarea solo si el pomodoro no está en ejecución
+      taskHistory.push(inputTarea);
+      localStorage.setItem('taskHistory', JSON.stringify(taskHistory));
+      inputTarea = ""; // Limpiar el campo de entrada después de cambiar la tarea
+    }
+  }
+
+  // Nueva función para definir y guardar la tarea actual
+  function definirYGuardarTarea() {
+    // Cambiar la tarea solo si no hay tareas en ejecución actualmente
+    if (!tareaEnEjecucion()) {
+      // Asegurarse de que hay un nombre de tarea válido antes de cambiar
+      if (inputTarea.trim() !== "") {
+        taskHistory.push(inputTarea.trim());
+        localStorage.setItem('taskHistory', JSON.stringify(taskHistory));
+        inputTarea = ""; // Limpiar el campo de entrada después de cambiar la tarea
+      }
+    }
+  }
+
+ // Función que verifica si hay una tarea en ejecución actualmente
+ function tareaEnEjecucion() {
+  console.log('Hay una tarea en Ejecución');
+    return pomodoroRunning; // Acceder al valor reactivamente
   }
 
   afterUpdate(() => {
@@ -146,22 +138,37 @@
       actualizarTiempoMostrado();
     }
   });
-
 </script>
+
+<section class="contenedor-fila">
+  <label for="inputTarea">Nombre de la tarea:</label>
+  <input type="text" bind:value={inputTarea} id="inputTarea" name="inputTarea" placeholder="Ingresa el nombre de la tarea..." required>
+  <button 
+  on:click={cambiarTarea}
+   
+   >
+   Cambiar Tarea
+  </button>
+  <button 
+  on:click={definirYGuardarTarea}
+   >
+   Definir Tarea
+  </button>
+</section>
+
 
 <section class="ContenedorTimer">
 
-    <h1>{titulo}</h1>
+    
     <section class="contenedor-tempo">
       <span>{tiempoMostrado}</span>
-
     </section>
 
     <section class="botones">
-      <button on:click={iniciarPomodoro} disabled={pomodoroRunning || inputTarea === ""}>Iniciar Pomodoro</button>
-      <button on:click={pausarPomodoro} disabled={!pomodoroRunning}>Pausar Pomodoro</button>
-      <button on:click={detenerPomodoro} disabled={!pomodoroRunning}>Detener Pomodoro</button>
-      <button on:click={siguienteCiclo} disabled={pomodoroRunning}>Siguiente Ciclo</button>
+      <button on:click={iniciarPomodoro} >Iniciar Pomodoro</button>
+      <button on:click={pausarPomodoro} >Pausar Pomodoro</button>
+      <button on:click={detenerPomodoro} >Detener Pomodoro</button>
+      <button on:click={siguienteCiclo} >Siguiente Ciclo</button>
 
     </section>
     
@@ -172,7 +179,6 @@
 
     .ContenedorTimer {
         margin:2%;
-
 
     }
 
@@ -237,5 +243,36 @@
     align-items: center; /* Centra verticalmente dentro del span */
     border-radius: 50%;
 }
+
+.contenedor-fila {
+    margin: 2%;
+    display: flex;
+    align-items: center;
+  }
+
+  label {
+    margin-right: 1%; /* Ajusta el margen según tus necesidades */
+    flex-shrink: 0; /* Evita que la etiqueta se reduzca si hay poco espacio */
+    font-size: 18px;
+  }
+
+  input {
+    max-width: 100%;
+    width: 390px;
+  }
+
+  button {
+    background: linear-gradient(to right, #ff3e00, #808080);
+    color: whitesmoke;
+    border-color: #342300;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Agregamos una transición para suavizar el cambio de color */
+  }
+
+  button:active {
+    background:linear-gradient(to left, #258fd6, #676767);
+    border-color: #011c2f; 
+
+  }
 
 </style>
