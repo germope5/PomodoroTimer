@@ -1,10 +1,12 @@
-import App from './App.svelte';
+// main.js
+import Pomodoro from './components/Pomodoro.svelte';
+import 'svelte-spa-router';
 
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'Everyone'
-	}
+const app = new Pomodoro({
+  target: document.body,
+  props: {
+    // propiedades si es necesario
+  },
 });
 
 export default app;
