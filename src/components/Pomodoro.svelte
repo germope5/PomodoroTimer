@@ -6,7 +6,7 @@
 </script>
 
 <section>
-  <Timer {pomodoroRunning} />
+  <!-- <Timer {pomodoroRunning} /> -->
   <TaskHistory {pomodoroRunning} />
 </section>
 

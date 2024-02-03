@@ -1,5 +1,5 @@
 <script>
-  import { onMount, afterUpdate, onDestroy } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
   import TimerComponent from './TimerComponent.svelte';
 
   export let historial;
@@ -47,7 +47,7 @@
           actualizarTiempoTrabajo();
         } else {
           detenerPomodoro();
-          const tarea = 'Tarea de trabajo'; // Puedes cambiar esto según tu lógica
+          const tarea = 'Tarea de trabajo';
           handleHistorial({
             fechaInicio: new Date(),
             fechaFin: new Date(),
@@ -71,12 +71,15 @@
     pomodoroRunning = false;
   }
 
-  function detenerPomodoro() {
-    clearInterval(temporizador);
-    pomodoroRunning = false;
-    tiempoTrabajo = 5; // Reiniciar el tiempo a 25 minutos
-    // iniciarPomodoro();
-  }
+ // Después de detener el pomodoro
+function detenerPomodoro() {
+  clearInterval(temporizador);
+  pomodoroRunning = false;
+  tiempoTrabajo = 5; // Reiniciar el tiempo a 25 minutos
+
+  // Emitir el evento pomodoroFin
+  dispatch('pomodoroFin', new Date());
+}
 
   function siguienteCiclo() {
     detenerPomodoro();
@@ -95,20 +98,18 @@
   }
 
   function notificar(mensaje) {
-  if (document.hidden) {
-    // If the document is hidden, use Web Notifications API
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        Notification('Pomodoro App', {
-          body: mensaje,
-        });
-      }
-    });
-  } else {
-    // If the document is visible, use a simple alert
-    alert(mensaje);
+    if (document.hidden) {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification('Pomodoro App', {
+            body: mensaje,
+          });
+        }
+      });
+    } else {
+      alert(mensaje);
+    }
   }
-}
 </script>
 
 <div>
@@ -119,6 +120,7 @@
     {pausarPomodoro}
     {detenerPomodoro}
     {siguienteCiclo}
+    {actualizarTiempoTrabajo}
   />
   <button on:click="{handleConfiguracion}">Configuración</button>
 </div>

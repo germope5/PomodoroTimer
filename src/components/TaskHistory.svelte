@@ -1,7 +1,8 @@
 <script>
-  export let historial = [];
+  import Timer from "./Timer.svelte";
 
-  let nuevaTarea = ""; // Nuevo estado local para el nombre de la tarea
+  export let historial = [];
+  let nuevaTarea = "";
 
   function formatTiempo(minutos) {
     const horas = Math.floor(minutos / 60);
@@ -9,50 +10,52 @@
     return `${horas}h ${minutosRestantes}min`;
   }
 
-  // Nueva función para manejar cambios en el input
   function handleInput(event) {
     nuevaTarea = event.target.value;
   }
 
-  // Nueva función para agregar una tarea al historial
-  function agregarTarea() {
-    if (nuevaTarea.trim() !== "") {
-      historial = [
-        ...historial,
-        {
-          tarea: nuevaTarea,
-          fechaInicio: new Date(),
-          fechaFin: null,
-          tiempoTotal: 0,
-        },
-      ];
-      nuevaTarea = ""; // Limpiar el input después de agregar la tarea
-    }
-  }
-
-  // Nueva función para manejar la fecha de fin del Pomodoro
   function handlePomodoroFin(fecha) {
-    if (historial.length > 0) {
-      const ultimaTarea = historial[historial.length - 1];
-      ultimaTarea.fechaFin = fecha;
-      ultimaTarea.tiempoTotal = calcularTiempoTotal(ultimaTarea.fechaInicio, fecha);
+    if (historial) {
+      const tareaGuardada = {
+        tarea: nuevaTarea,
+        fechaInicio: pomodoroInicio,
+        fechaFin: fecha,
+        tiempoTotal: calcularTiempoTotal(pomodoroInicio, fecha),
+      };
+
+      historial.push(tareaGuardada);
+      localStorage.setItem('historial', JSON.stringify(historial));
+      nuevaTarea = ""; // Limpiar el campo de entrada después de guardar la tarea
     }
   }
 
-  // Calcular el tiempo total en minutos
   function calcularTiempoTotal(fechaInicio, fechaFin) {
     const tiempoMilisegundos = fechaFin - fechaInicio;
     const tiempoMinutos = tiempoMilisegundos / (1000 * 60);
     return tiempoMinutos;
   }
+
+  function guardarTarea() {
+    if (nuevaTarea.trim() !== "") {
+      const tareaGuardada = {
+        tarea: nuevaTarea,
+        fechaInicio: new Date(),
+        fechaFin: null, // No hay fecha de fin aún
+        tiempoTotal: 0, // Aún no se ha completado
+      };
+
+      historial.push(tareaGuardada);
+      localStorage.setItem('historial', JSON.stringify(historial));
+      nuevaTarea = ""; // Limpiar el campo de entrada después de guardar la tarea
+    }
+  }
 </script>
 
 <div>
   <h1>Historial de Tareas</h1>
-
-  <!-- Input para la nueva tarea -->
   <input type="text" bind:value={nuevaTarea} on:input={handleInput} placeholder="Nueva tarea..." />
-  <button on:click={agregarTarea}>Agregar Tarea</button>
+  <button on:click={guardarTarea}>Guardar Tarea</button>
+  <Timer on:pomodoroFin={handlePomodoroFin} />
 
   {#if historial.length === 0}
     <p>No hay entradas en el historial.</p>
@@ -61,10 +64,8 @@
       <div class="historial-item">
         <p>{entrada.tarea}</p>
         <p>Fecha de inicio: {entrada.fechaInicio.toLocaleString()}</p>
-        {#if entrada.fechaFin}
-          <p>Fecha de fin: {entrada.fechaFin.toLocaleString()}</p>
-          <p>Tiempo total: {formatTiempo(entrada.tiempoTotal)}</p>
-        {/if}
+        <p>Fecha de fin: {entrada.fechaFin.toLocaleString()}</p>
+        <p>Tiempo total: {formatTiempo(entrada.tiempoTotal)}</p>
       </div>
     {/each}
   {/if}
