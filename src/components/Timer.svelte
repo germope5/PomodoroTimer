@@ -1,148 +1,181 @@
+<!-- Timer.svelte -->
 <script>
-  import { onMount, afterUpdate } from 'svelte';
-  import TimerComponent from './TimerComponent.svelte';
+    import { timer, addToHistory, settings } from '../store';
+    import { onDestroy } from 'svelte';
 
-  export let historial;
-  export let descansoLargo;
-  export let descansoCorto;
-  export let handleHistorial;
-  export let handleConfiguracion;
+    let interval;
 
-  let tiempoTrabajo = 5; // 25 minutos
-  let bloquesTrabajo = 0;
-
-  let pomodoroRunning = false;
-  let temporizador;
-
-  onMount(() => {
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      // Limpiar el temporizador al destruir el componente
-      clearInterval(temporizador);
+    // Función para formatear el tiempo en MM:SS
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
-  });
 
-  afterUpdate(() => {
-    if (pomodoroRunning) {
-      actualizarTiempoTrabajo();
+    $: {
+        // Actualiza el tiempo formateado cada vez que cambia el tiempo
+        $timer.formattedTime = formatTime($timer.time);
     }
-  });
 
-  function handleVisibilityChange() {
-    if (document.hidden) {
-      pausarPomodoro();
-    } else {
-      if (pomodoroRunning) {
-        iniciarPomodoro();
-      }
-    }
-  }
+    const startTimer = () => {
+        $timer.isActive = true;
+        $timer.time = 0; // Reinicia el tiempo al inicio
+        interval = setInterval(() => {
+            $timer.time++;
+            $timer.totalTime++;
 
-  function iniciarPomodoro() {
-    if (!pomodoroRunning && tiempoTrabajo > 0) {
-      pomodoroRunning = true;
-      temporizador = setInterval(() => {
-        if (tiempoTrabajo > 0) {
-          tiempoTrabajo--;
-          actualizarTiempoTrabajo();
-        } else {
-          detenerPomodoro();
-          const tarea = 'Tarea de trabajo';
-          handleHistorial({
-            fechaInicio: new Date(),
-            fechaFin: new Date(),
-            tarea,
-            tiempoTotal: calcularTiempoTotal(),
-          });
+            // Verifica si ha completado un bloque (25 minutos de trabajo o 5/15 minutos de descanso)
+            if ($timer.time === 25 * 60 || $timer.time === 30 * 60 || $timer.time === 35 * 60) {
+                // Realiza acciones específicas al finalizar un bloque (notificaciones, etc.)
+                showNotification("Bloque completado", `¡Excelente trabajo en "${$timer.task}"!`);
 
-          if (bloquesTrabajo % 3 === 2) {
-            tiempoTrabajo = descansoLargo;
-          } else {
-            tiempoTrabajo = descansoCorto;
-          }
-          bloquesTrabajo++;
+                // Agrega la entrada al historial
+                addToHistory({
+                    startTime: new Date(),
+                    endTime: new Date(),
+                    task: $timer.task,
+                    totalTime: $timer.totalTime,
+                });
+
+                // Reinicia el temporizador para el siguiente bloque
+                $timer.time = 0;
+
+                // Incrementa el contador de bloques completados
+                $timer.completedBlocks++;
+
+                // Verifica si se han completado tres bloques para activar el bloque de descanso más largo
+                if ($timer.completedBlocks % 3 === 0) {
+                    $timer.currentBreakTime = settings.longBreakDuration * 60; // Duración del descanso largo
+                } else {
+                    $timer.currentBreakTime = settings.shortBreakDuration * 60; // Duración del descanso corto
+                }
+            }
+
+            // Verifica si ha completado el bloque de descanso
+            if ($timer.time === $timer.currentBreakTime) {
+                showNotification("Descanso completado", `¡Bien hecho! ¡Es hora de volver al trabajo!`);
+                $timer.time = 0;
+            }
+        }, 1000);
+    };
+
+    const pauseTimer = () => {
+        $timer.isPaused = true;
+        clearInterval(interval);
+    };
+
+    const stopTimer = () => {
+        $timer.isActive = false;
+        $timer.isPaused = false;
+        $timer.time = 0;
+        $timer.formattedTime = "00:00"; // Restablece el formato del tiempo al detener el temporizador
+        clearInterval(interval);
+        $timer.completedBlocks = 0; // Reinicia el contador de bloques completados al detener el temporizador
+    };
+
+    const nextCycle = () => {
+        // Lógica para pasar al siguiente ciclo
+        // Por ejemplo, puedes reiniciar el temporizador para el próximo ciclo
+        stopTimer();
+        startTimer();
+    };
+
+    // Función para mostrar notificaciones
+    const showNotification = (title, message) => {
+        if (Notification.permission === "granted") {
+            new Notification(title, { body: message });
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    new Notification(title, { body: message });
+                }
+            });
         }
-      }, 1000);
-    }
-  }
+    };
 
-  function pausarPomodoro() {
-    clearInterval(temporizador);
-    pomodoroRunning = false;
-  }
-
- // Después de detener el pomodoro
-function detenerPomodoro() {
-  clearInterval(temporizador);
-  pomodoroRunning = false;
-  tiempoTrabajo = 5; // Reiniciar el tiempo a 25 minutos
-
-  // Emitir el evento pomodoroFin
-  dispatch('pomodoroFin', new Date());
-}
-
-  function siguienteCiclo() {
-    detenerPomodoro();
-    bloquesTrabajo = 0;
-    tiempoTrabajo = 5; // Reiniciar el tiempo a 25 minutos
-    iniciarPomodoro();
-  }
-
-  function actualizarTiempoTrabajo() {
-    // Actualizar el tiempo visualizado en el componente TimerComponent.svelte
-  }
-
-  function calcularTiempoTotal() {
-    // Calcular el tiempo total en minutos
-    return (historial.reduce((total, entrada) => total + entrada.tiempoTotal, 0) + tiempoTrabajo) / 60;
-  }
-
-  function notificar(mensaje) {
-    if (document.hidden) {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          new Notification('Pomodoro App', {
-            body: mensaje,
-          });
-        }
-      });
-    } else {
-      alert(mensaje);
-    }
-  }
+    onDestroy(() => {
+        clearInterval(interval);
+    });
 </script>
 
-<div>
-  <TimerComponent
-    {tiempoTrabajo}
-    {pomodoroRunning}
-    {iniciarPomodoro}
-    {pausarPomodoro}
-    {detenerPomodoro}
-    {siguienteCiclo}
-    {actualizarTiempoTrabajo}
-  />
-  <button on:click="{handleConfiguracion}">Configuración</button>
-</div>
-
+<section>
+    <h1>{ $timer.task || "No hay tarea definida" }</h1>
+    <p>Time: </p>
+    <div class="Timer">
+        <h1>
+            { $timer.formattedTime }
+        </h1>
+    </div>
+    <button on:click={startTimer} disabled={$timer.isActive}>Start</button>
+    <button on:click={pauseTimer} disabled={!$timer.isActive || $timer.isPaused}>Pause</button>
+    <button on:click={stopTimer} disabled={!$timer.isActive}>Stop</button>
+    <button on:click={nextCycle} disabled={$timer.isActive}>Next Cycle</button>
+</section>
+  
 <style>
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    /* Estilos para el temporizador */
+  
+    section {
+      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
+      /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+      
+    }
+  
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+  
+    p {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 29px;
+    }
+  
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
 
-  button {
-    margin-top: 10px;
-    padding: 8px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+    }
+  
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
 
-  button:hover {
-    background-color: #45a049;
-  }
-</style>
+    .Timer {
+        display: flex;
+    align-items: center; /* Alinea verticalmente en el centro */
+    justify-content: center; /* Alinea horizontalmente en el centro */
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(to top, #3498db, #c0392b);
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    height: 250px;
+    margin: auto;
+
+
+    }
+
+    .Timer h1 {
+    font-size: 50px;
+    margin-bottom: 10px;
+    color: aliceblue;
+}
+
+  </style>
+  
+
+  
