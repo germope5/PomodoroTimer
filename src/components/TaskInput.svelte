@@ -37,6 +37,7 @@
       border: 1px solid #07be20;
       border-radius: 4px;
       box-sizing: border-box;
+      background: linear-gradient(to right, #33b037, #dfdfdf);
     }
   
     button {

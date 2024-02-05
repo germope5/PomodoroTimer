@@ -147,7 +147,7 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      transition: background 0.3s; /* Agrega transición para suavizar el cambio de color */
+      transition: background 0.9s; /* Agrega transición para suavizar el cambio de color */
 
     }
 
@@ -160,7 +160,7 @@ button:active {
 }
   
     button:disabled {
-      background: #ccc;
+      background: #a6a6a6;
       cursor: not-allowed;
     }
 
