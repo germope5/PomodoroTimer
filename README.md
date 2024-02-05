@@ -1,28 +1,74 @@
 
 
-# svelte app
+# Pomodoro Timer
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+Esta es una aplicación simple de Pomodoro para gestionar tu tiempo de trabajo y descanso.
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+
+## Descripción del Proyecto
+El Pomodoro Timer es una aplicación de temporizador diseñada para ayudarte a mejorar tu productividad mediante la técnica de gestión del tiempo conocida como "Pomodoro". Esta técnica implica dividir tu trabajo en intervalos de tiempo cortos, llamados "pomodoros", seguidos de descansos breves. El objetivo es maximizar la concentración y mantener la frescura mental.
+
+## Funcionalidades
+
+- **Temporizador Pomodoro:** Inicia un temporizador de trabajo de 25 minutos.
+- **Descanso corto:** Después de cada ciclo de trabajo, disfruta de un descanso corto de 5 minutos.
+- **Descanso largo:** Después de tres ciclos de trabajo, toma un descanso largo de 15 minutos.
+
+
+## Uso
+
+1. **Definir tarea:**
+   - Ingresa el nombre de la tarea en el campo "Nombre de la Tarea" en la sección "Tarea" y haz clic en "Guardar".
+
+2. **Iniciar el Pomodoro:**
+   - Haz clic en el botón "Iniciar" para comenzar el temporizador de trabajo.
+
+3. **Pausar y Detener:**
+   - Puedes pausar el temporizador en cualquier momento haciendo clic en "Pausar".
+   - Para detener completamente el temporizador, haz clic en "Detener".
+
+4. **Historial de Tareas:**
+   - Consulta el historial de tareas completadas en la sección "Historial de Tareas".
+
+## Requisitos
+1. **Node.js y npm**
+    - Asegúrate de tener Node.js instalado. npm (Node Package Manager) se instalará automáticamente con Node.js.
+
+2. **Svelte**
+    - Asegúrate de tener Svelte instalado en el proyecto de desarrollo.
+```bash
+    npm create svelte@latest my-app
+```
+```bash
+    cd my-app
+```
+```bash
+    npm install
+```
+```bash
+    npm run dev
+```
+
+
+3. **Definir tarea:**
+
+## Comenzar / Instalación
+
+Clonar el Repositorio
 
 ```bash
-npx degit sveltejs/template svelte-app
+git clone https://github.com/username/PomodoroTimer.git
+```
+
+Instalar las dependencias...
+
+```bash
 cd svelte-app
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
-
-## Get started
-
-Install the dependencies...
-
 ```bash
-cd svelte-app
 npm install
 ```
-
 ...then start [Rollup](https://rollupjs.org):
 
 ```bash
@@ -35,7 +81,7 @@ By default, the server will only respond to requests from localhost. To allow co
 
 If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
 
-## Building and running in production mode
+## Compilar y ejecutar en modo de Producción
 
 To create an optimised version of the app:
 
@@ -46,60 +92,10 @@ npm run build
 You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
 
 
-## Single-page app mode
 
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
 
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
 
-```js
-"start": "sirv public --single"
-```
 
-## Using TypeScript
 
-This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
 
-```bash
-node scripts/setupTypeScript.js
-```
 
-Or remove the script via:
-
-```bash
-rm scripts/setupTypeScript.js
-```
-
-If you want to use `baseUrl` or `path` aliases within your `tsconfig`, you need to set up `@rollup/plugin-alias` to tell Rollup to resolve the aliases. For more info, see [this StackOverflow question](https://stackoverflow.com/questions/63427935/setup-tsconfig-path-in-svelte).
-
-## Deploying to the web
-
-### With [Vercel](https://vercel.com)
-
-Install `vercel` if you haven't already:
-
-```bash
-npm install -g vercel
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-vercel deploy --name my-project
-```
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public my-project.surge.sh
-```
