@@ -54,9 +54,9 @@ El Pomodoro Timer es una aplicación de temporizador diseñada para ayudarte a m
     - Contar con un editor de texto completo para manejar y estructurar de manera adecuada tu proyecto.
 
 ## Capturas de Pantalla
-[!Captura de pantalla 1](public/screenshots/ss1.png)    
-[!](public/screenshots/ss2.png) 
-[!](public/screenshots/ss3.png)   
+![Captura de pantalla 1](public/screenshots/ss1.png)    
+![Captura de pantalla 2](public/screenshots/ss2.png) 
+![Captura de pantalla 3](public/screenshots/ss3.png)   
 
 ## Comenzar / Instalación
 
