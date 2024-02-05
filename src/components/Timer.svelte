@@ -25,7 +25,7 @@
             $timer.totalTime++;
 
             // Verifica si ha completado un bloque (25 minutos de trabajo o 5/15 minutos de descanso)
-            if ($timer.time === 25 * 60 || $timer.time === 30 * 60 || $timer.time === 35 * 60) {
+            if ($timer.time === 5 || $timer.time === 30 * 60 || $timer.time === 35 * 60) {
                 // Realiza acciones específicas al finalizar un bloque (notificaciones, etc.)
                 showNotification("Bloque completado", `¡Excelente trabajo en "${$timer.task}"!`);
 
