@@ -20,7 +20,7 @@
     /* Estilos para la entrada de texto de la tarea */
   
     section {
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
   
     label {
@@ -31,22 +31,33 @@
     }
   
     input {
-      width: 40%;
+      width: 30%;
       padding: 8px;
       margin-bottom: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #07be20;
       border-radius: 4px;
       box-sizing: border-box;
     }
   
     button {
-      padding: 8px 15px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+    padding: 8px 15px;
+    background: linear-gradient(to top, #16b31b, #0a99af);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s; /* Agrega transición para suavizar el cambio de color */
+}
+
+button:hover {
+    background: linear-gradient(to top, #143a3f, #15c51b); /* Cambia el color al hacer hover */
+}
+
+button:active {
+    background: linear-gradient(to top, #77600e, #ff9900); /* Cambia el color al hacer clic */
+}
+
+
   </style>
   
   <section>

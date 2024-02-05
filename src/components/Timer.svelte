@@ -142,16 +142,25 @@
       padding: 10px 15px;
       margin: 10px 5px;
       font-size: 16px;
-      background-color: #4caf50;
+      background: linear-gradient(to top, #16b31b, #0a99af);
       color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: background 0.3s; /* Agrega transición para suavizar el cambio de color */
 
     }
+
+    button:hover {
+        background: linear-gradient(to top, #143a3f, #15c51b); /* Cambia el color al hacer hover */
+}
+
+button:active {
+    background: linear-gradient(to top, #77600e, #ff9900); /* Cambia el color al hacer clic */
+}
   
     button:disabled {
-      background-color: #ccc;
+      background: #ccc;
       cursor: not-allowed;
     }
 
