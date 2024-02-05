@@ -27,10 +27,11 @@
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
+      color: #222;
     }
   
     input {
-      width: 100%;
+      width: 40%;
       padding: 8px;
       margin-bottom: 10px;
       border: 1px solid #ccc;

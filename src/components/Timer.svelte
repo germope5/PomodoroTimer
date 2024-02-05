@@ -99,17 +99,18 @@
 </script>
 
 <section>
-    <h1>{ $timer.task || "No hay tarea definida" }</h1>
-    <p>Time: </p>
+    
+    <p>Tiempo: </p>
     <div class="Timer">
         <h1>
             { $timer.formattedTime }
         </h1>
     </div>
-    <button on:click={startTimer} disabled={$timer.isActive}>Start</button>
-    <button on:click={pauseTimer} disabled={!$timer.isActive || $timer.isPaused}>Pause</button>
-    <button on:click={stopTimer} disabled={!$timer.isActive}>Stop</button>
-    <button on:click={nextCycle} disabled={$timer.isActive}>Next Cycle</button>
+    <button on:click={startTimer} disabled={$timer.isActive}>Iniciar</button>
+    <button on:click={pauseTimer} disabled={!$timer.isActive || $timer.isPaused}>Pausar</button>
+    <button on:click={stopTimer} disabled={!$timer.isActive}>Detener</button>
+    <button on:click={nextCycle} disabled={$timer.isActive}>Ciclo Nuevo</button>
+    <h1>{ $timer.task || "No hay ninguna Tarea definida" }</h1>
 </section>
   
 <style>
@@ -117,7 +118,7 @@
   
     section {
       text-align: center;
-      padding: 20px;
+      /* padding: 20px; */
       border-radius: 8px;
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
       
@@ -125,14 +126,16 @@
   
     h1 {
       font-size: 24px;
-      color: #333;
+      color: #222;
       margin-bottom: 10px;
     }
   
     p {
       font-size: 18px;
-      color: #555;
-      margin-bottom: 29px;
+      color: #222;
+      margin-bottom: 10px;
+      font-weight: bold; /* Establece el texto en negrita */
+      font-size: 28px;
     }
   
     button {
@@ -158,9 +161,10 @@
     justify-content: center; /* Alinea horizontalmente en el centro */
     text-align: center;
     padding: 20px;
-    background: linear-gradient(to top, #3498db, #c0392b);
+    background: linear-gradient(to top, #19c81f, #087b8d);
     color: #fff;
     border-radius: 50%;
+    border-color: #222;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 250px;
     height: 250px;

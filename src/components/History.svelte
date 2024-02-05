@@ -22,13 +22,13 @@
   
     h1 {
       font-size: 24px;
-      color: #333;
+      color: #222;
       margin-bottom: 20px;
     }
   
     p {
       font-size: 16px;
-      color: #555;
+      color: #333;
       margin-bottom: 10px;
     }
   
