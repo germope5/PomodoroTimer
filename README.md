@@ -31,10 +31,10 @@ El Pomodoro Timer es una aplicación de temporizador diseñada para ayudarte a m
    - Consulta el historial de tareas completadas en la sección "Historial de Tareas".
 
 ## Requisitos
-1. **Node.js y npm**
+1. **Node.js y npm:**
     - Asegúrate de tener Node.js instalado. npm (Node Package Manager) se instalará automáticamente con Node.js.
 
-2. **Svelte**
+2. **Svelte:**
     - Asegúrate de tener Svelte instalado en el proyecto de desarrollo.
 ```bash
     npm create svelte@latest my-app
@@ -50,7 +50,8 @@ El Pomodoro Timer es una aplicación de temporizador diseñada para ayudarte a m
 ```
 
 
-3. **Definir tarea:**
+3. **Contar con un Editor de texto de tu elección:**
+    - Contar con un editor de texto completo para manejar y estructurar de manera adecuada tu proyecto.
 
 ## Comenzar / Instalación
 
@@ -69,27 +70,27 @@ cd svelte-app
 ```bash
 npm install
 ```
-...then start [Rollup](https://rollupjs.org):
+...a continuación inicie [Rollup](https://rollupjs.org):
 
 ```bash
 npm run dev
 ```
 
-Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
+Navega a [localhost:8080](http://localhost:8080). Deberías ver tu aplicación ejecutándose. Edita un fichero de componentes en `src`, guárdalo y recarga la página para ver los cambios.
 
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
+Por defecto, el servidor sólo responderá a peticiones desde localhost. Para permitir conexiones desde otros ordenadores, edita los comandos `sirv` en package.json para incluir la opción `--host 0.0.0.0`.
 
-If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
+Si utiliza [Visual Studio Code](https://code.visualstudio.com/) le recomendamos que instale la extensión oficial [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). Si utilizas otros editores, puede que necesites instalar un plugin para obtener el resaltado de sintaxis y el intellisense.
 
 ## Compilar y ejecutar en modo de Producción
 
-To create an optimised version of the app:
+Para crear una versión optimizada de la aplicación:
 
 ```bash
 npm run build
 ```
 
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
+Puedes ejecutar la aplicación recién construida con `npm run start`. Esto utiliza [sirv](https://github.com/lukeed/sirv), que se incluye en las `dependencias` de tu paquete.json para que la aplicación funcione cuando la despliegues en plataformas como [Heroku](https://heroku.com).
 
 
 
