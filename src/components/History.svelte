@@ -15,20 +15,19 @@
     section {
       text-align: center;
       padding: 20px;
-      
       border-radius: 8px;
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
     }
   
     h1 {
       font-size: 24px;
-      color: #222;
+      color: white;
       margin-bottom: 20px;
     }
   
     p {
       font-size: 16px;
-      color: #333;
+      color: #cbcbcb;
       margin-bottom: 10px;
     }
   
@@ -49,10 +48,10 @@
     {#if entries.length > 0}
       {#each entries as entry (entry.startTime)}
         <div>
-          <p>Tarea: {entry.task}</p>
+          <p>Nombre de la Tarea: {entry.task}</p>
           <p>Tiempo total: {entry.totalTime} minutos</p>
-          <p>Inicio: {entry.startTime.toLocaleString()}</p>
-          <p>Fin: {entry.endTime.toLocaleString()}</p>
+          <p>Hora de Inicio: {entry.startTime.toLocaleString()}</p>
+          <p>Hora de Fin: {entry.endTime.toLocaleString()}</p>
         </div>
       {/each}
     {:else}

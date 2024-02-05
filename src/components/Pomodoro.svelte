@@ -7,27 +7,44 @@
 
 <style>
 
-  div {
-    text-align: center;
-    /* background: radial-gradient(circle, #3498db, #c0392b); */
-    /* border-radius: 8px; */
-    /* padding: 20px; */
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+
+  .container {
     display: flex;
-    flex-direction: column;
+    flex-direction:row-reverse;
+    
+  }
+
+  .cont-tareas {
+    width: 60%;
+    /* display: flex;
+    flex-direction: column; */
+  }
+
+  .cont-timer {
+    width: 40%;
+
   }
 
   h1 {
-    color: #222;
+    color: white;
     margin-bottom: 20px;
     font-size: 50px;
+    text-align: center;
   }
 </style>
 
 <div>
   <h1>Pomodoro Timer</h1>
+  <div class="container">
+    <div class="cont-tareas">
+      <TaskInput />
+      <History />
+    </div>
+    
+    <div class="cont-timer">
+      <Timer />
+    </div>
+  </div>
 
-  <TaskInput />
-  <Timer />
-  <History />
+  
 </div>

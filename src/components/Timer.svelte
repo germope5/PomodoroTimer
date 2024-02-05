@@ -100,7 +100,7 @@
 
 <section>
     
-    <p>Tiempo: </p>
+    <h1>{ $timer.task || "No hay ninguna Tarea definida aún" }</h1>
     <div class="Timer">
         <h1>
             { $timer.formattedTime }
@@ -110,7 +110,7 @@
     <button on:click={pauseTimer} disabled={!$timer.isActive || $timer.isPaused}>Pausar</button>
     <button on:click={stopTimer} disabled={!$timer.isActive}>Detener</button>
     <button on:click={nextCycle} disabled={$timer.isActive}>Ciclo Nuevo</button>
-    <h1>{ $timer.task || "No hay ninguna Tarea definida" }</h1>
+    
 </section>
   
 <style>
@@ -119,24 +119,17 @@
     section {
       text-align: center;
       /* padding: 20px; */
-      border-radius: 8px;
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
       
     }
   
     h1 {
       font-size: 24px;
-      color: #222;
+      color: white;
       margin-bottom: 10px;
     }
   
-    p {
-      font-size: 18px;
-      color: #222;
-      margin-bottom: 10px;
-      font-weight: bold; /* Establece el texto en negrita */
-      font-size: 28px;
-    }
+  
   
     button {
       padding: 10px 15px;
