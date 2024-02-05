@@ -34,7 +34,7 @@
 </style>
 
 <div>
-  <h1>Pomodoro Timer</h1>
+  <h1>Pomodoro Timer ⏲️</h1>
   <div class="container">
     <div class="cont-tareas">
       <TaskInput />
